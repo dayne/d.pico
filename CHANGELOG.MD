@@ -8,6 +8,12 @@ Tracking notable changes to this proejct.  Format is based on [Keep a Changelog]
 
 ## [Unreleased]
 
+## [0.0.2] - 2024-02-25
+### Added
+- VERSION file
+### Changed
+- Moved around scripts and names: `cl-picoruby` -> `cl-picoruby-install`
+
 ## [0.0.1] - 2024-02-25
 ### Added
 The whole enchilada as of now!
