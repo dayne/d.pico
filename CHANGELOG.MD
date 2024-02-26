@@ -15,5 +15,8 @@ The whole enchilada as of now!
 bin
 ├── cl-picoruby
 ├── cl-picoruby-latest
-├── insanity_check
+lib
+├── env.sh
+├── helpers.sh
+└── insanity_check
 ```
