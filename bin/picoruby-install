@@ -2,7 +2,8 @@
 SCRIPT_DIR=$(dirname "$0")
 source $SCRIPT_DIR/../lib/helpers.sh
 
-export RP2DIR=/media/$USER/RPI-RP2 # move to env
+export RP2DIR=/media/$USER/RPI-RP2 # TODO: move to env
+export R2P2=/media/$USER/R2P2      # TODO: move to env
 setup_d.pico
 
 function check_rp2dir() {
@@ -10,6 +11,10 @@ function check_rp2dir() {
   if [ -d $RP2DIR ]; then
     info "## RP2DIR exists: $RP2DIR"
   else
+    if [ -d $R2P2 ]; then
+      warning "R2P2 dir available: $R2P2"
+      warning "Unplug the board and press BOOTSEL while plugging board back in to put it into LOAD mode"
+    fi
     boom "## RP2DIR not available: $RP2DIR"
   fi
   yak "# INFO_UF2.TXT inspection"
@@ -58,6 +63,7 @@ function install_picoruby() {
   agree "Install PICORUBY v${PICORUBY_UF2_VERSION} on to ${BOARD_ID} at ${RP2DIR}"
   if [ $? -eq 0 ]; then
     run "cp $TARGET_UF2 $RP2DIR"
+    cowsay "${PICORUBY_UF2_VERSION} available. Happy Hacking" | lolcat
   else
     info "# DIY method: cp $TARGET_UF2 $RP2DIR "
   fi

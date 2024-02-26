@@ -7,6 +7,9 @@ Tracking notable changes to this proejct.  Format is based on [Keep a Changelog]
 > `## [Maj.Min.Tweak] - YYYY-MM-DD`
 
 ## [Unreleased]
+- started making `picoruby-build`
+- rename to remove `cl-` prefix since this will not be integrated into the clogthong project.
+- adding a TODO section to the README
 
 ## [0.0.2] - 2024-02-25
 ### Added

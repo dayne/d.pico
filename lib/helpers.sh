@@ -56,6 +56,10 @@ function got_command() {
 function require_command() {
   which $1 > /dev/null 2>&1
   if [ $? -eq 1 ]; then
+    if [ "$2" != "" ]; then
+      echo "#>> missing command : $1"
+      echo "#>> POSSIBLE FIX: $2"
+    fi
     boom "required command not found: $1"
   fi
 }

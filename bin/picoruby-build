@@ -1,0 +1,53 @@
+#!/usr/bin/bash
+SCRIPT_DIR=$(dirname "$0")
+source $SCRIPT_DIR/../lib/helpers.sh
+
+require_command git
+
+function checkout_picoruby() {
+  local picoruby_branch=master
+  local picoruby_repo=https://github.com/picoruby/R2P2
+
+  if [ ! -d $HOME/projects ]; then
+    info "Creating projects directory"
+    mkdir $HOME/projects
+  fi    
+
+  if [ ! -d $HOME/projects/R2P2 ]; then
+    info "Cloning picoruby"
+    git clone $picoruby_repo $HOME/projects/R2P2
+  fi
+  if [ $? -eq 0 ]; then
+    pushd . > /dev/null
+    cd $HOME/projects/R2P2
+    git checkout $picoruby_branch
+    git pull
+    popd > /dev/null
+  else
+    error "Failed to clone picoruby"
+  fi
+}
+function build_picoruby() {
+  require_command rake
+  require_command cmake
+  require_command ruby
+  require_command qemu-arm-static "sudo apt-get install gcc-arm-linux-gnueabihf libc6-dev-armhf-cross qemu-user-static"
+
+  pushd . > /dev/null
+  if [ ! -d $HOME/projects/R2P2 ]; then
+    checkout_picoruby
+  fi
+  pushd . > /dev/null
+  cd $HOME/projects/R2P2
+  rake
+  # find in build
+  popd > /dev/null
+}
+
+
+if [ "${BASH_SOURCE[0]}" = "$0" ]; then
+  setup_d.pico
+  d.pico-lol
+  checkout_picoruby
+  build_picoruby
+fi
