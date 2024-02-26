@@ -1,0 +1,72 @@
+#!/usr/bin/bash
+SCRIPT_DIR=$(dirname "$0")
+source $SCRIPT_DIR/../lib/helpers.sh
+
+export RP2DIR=/media/$USER/RPI-RP2 # move to env
+setup_d.pico
+
+function check_rp2dir() {
+  info "# Checking RP2DIR available at: RP2DIR"
+  if [ -d $RP2DIR ]; then
+    info "## RP2DIR exists: $RP2DIR"
+  else
+    boom "## RP2DIR not available: $RP2DIR"
+  fi
+  yak "# INFO_UF2.TXT inspection"
+  INFO_FILE=$RP2DIR/INFO_UF2.TXT
+  if [ ! -f $INFO_FILE ]; then
+    boom "## ABORT: RP2DIR does not have INFO_FILE: $(basename $INFO_FILE)"
+  fi
+  BOARD_ID=$(cat $INFO_FILE | grep "Board-ID:" | awk '{print $2}')
+  MODEL=$(cat $INFO_FILE | grep "Model:" | awk -F ":" '{print $NF}')
+  echo "## Board-ID: $BOARD_ID"
+  echo "## Model: $MODEL"
+  if [ ! "$BOARD_ID" = "RPI-RP2" ]; then
+    boom "BOARD_ID != RPI-RP2"
+  else
+    info "## BOARD_ID = RPI-RP2 ... we can work with this"
+  fi
+  export BOARD_ID
+  export MODEL
+}
+
+function check_picoruby {
+  YAML_FILE=$SCRIPT_CACHE_DIR/$PICORUBY_YAML
+  # Includes: PICORUBY_UF2_FILE and PICORUBY_UF2_VERSION
+  info "# Loading PICORUBY details from PICORUBY_YAML=${PICORUBY_YAML}"
+  if [ ! -f $YAML_FILE ]; then
+    boom "# YAML_FILE does not exist: $YAML_FILE"
+  fi
+  PICORUBY_UF2_FILE=$(cat $YAML_FILE | yq -r '.PICORUBY_UF2_FILE')
+  PICORUBY_UF2_VERSION=$(cat $YAML_FILE | yq -r '.PICORUBY_UF2_VERSION')
+  info "## PICORUBY_UF2_FILE=${PICORUBY_UF2_FILE}"
+  info "## PICORUBY_UF2_VERSION=${PICORUBY_UF2_VERSION}"
+  TARGET_UF2=$(echo ${SCRIPT_CACHE_DIR}/${PICORUBY_UF2_FILE})
+  if [ ! -f $TARGET_UF2 ]; then
+    warning "## Missing UF2 file: $PICORUBY_UF2_FILE"
+    boom "## FATAL: Missing UF2 file. Try running: cl-picoruby-latest"
+  else
+    info "## Found UF2 file: $TARGET_UF2"
+  fi
+  export PICORUBY_UF2_VERSION
+  export TARGET_UF2
+}
+
+function install_picoruby() {
+  check_rp2dir
+  check_picoruby
+  agree "Install PICORUBY v${PICORUBY_UF2_VERSION} on to ${BOARD_ID} at ${RP2DIR}"
+  if [ $? -eq 0 ]; then
+    run "cp $TARGET_UF2 $RP2DIR"
+  else
+    info "# DIY method: cp $TARGET_UF2 $RP2DIR "
+  fi
+}
+
+if [ "${BASH_SOURCE[0]}" = "$0" ]; then
+  d.pico-lol
+  install_picoruby
+else
+  # we are a spammy script.. spam out the obvious messages to keep things fun.
+  info "woggle bibbled ???"
+fi

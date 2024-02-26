@@ -1,0 +1,18 @@
+#!/usr/bin/bash
+SCRIPT_DIR=$(dirname "$0")
+source $SCRIPT_DIR/../lib/helpers.sh
+echo "# d.pico INSANITY CHECK"
+require_command curl
+echo "curl=true"
+require_command jq
+echo "jq=true"
+require_command figlet
+echo "figlett=true"
+require_command lolcat
+echo "lolcat=true"
+require_command cowsay
+sleep 1
+figlet "d.pico" | lolcat
+sleep 2
+clear
+cowsay "do not expect sanity .. but you have enough tools to survive" | lolcat

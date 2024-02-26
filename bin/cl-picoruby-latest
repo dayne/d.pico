@@ -1,0 +1,66 @@
+#!/usr/bin/bash
+SCRIPT_DIR=$(dirname "$0")
+source $SCRIPT_DIR/../lib/helpers.sh
+
+setup_d.pico
+
+export SCRIPT_CACHE_DIR
+export UF2_PICORUBY_FILE
+export PICORUBY_YAML
+
+function get_latest_version() {
+  # Fetch the latest release data from GitHub API
+  info "# Check the latest release data from GitHub API: ${PICORUBY_GITHUB_USER}/${PICORUBY_GITHUB_REPO}"
+  RELEASE_URL="https://api.github.com/repos/${PICORUBY_GITHUB_USER}/${PICORUBY_GITHUB_REPO}/releases/latest"
+  RELEASE_DATA=$(curl -s ${RELEASE_URL})
+  if [ ! $? -eq 0 ]; then
+    boom "Unable to fetch latest release data from GitHub API using curl"
+  fi
+
+  pushd . > /dev/null
+  info "## SCRIPT_CACHE_DIR=$SCRIPT_CACHE_DIR"
+  cd $SCRIPT_CACHE_DIR
+
+  # Extract the tag name (version) and the zipball_url (download URL) for the latest release
+  LATEST_VERSION=$(echo "$RELEASE_DATA" | jq -r '.tag_name')
+  ASSET_URL=$(echo "$RELEASE_DATA" | jq -r '.assets[0].browser_download_url')
+  ASSET_FILENAME=$(echo "$RELEASE_DATA" | jq -r '.assets[0].name')
+
+  info "## LATEST_VERSION=$LATEST_VERSION"
+  info "## ASSET_URL=$ASSET_URL"
+  info "## ASSET_FILENAME=$ASSET_FILENAME"
+  if [ -f $ASSET_FILENAME ]; then
+    info "# Skip download: $ASSET_FILENAME exists"
+  else
+    info "# Download $ASSET_FILENAME -> $SCRIPT_CACHE_DIR"
+    curl -s -L -o $ASSET_FILENAME $ASSET_URL 
+    info "## SHA256SUM: $(sha256sum $ASSET_FILENAME | awk '{ print $1 }')  $ASSET_FILENAME"
+  fi
+
+  UF2_PICORUBY_FILE=$(basename $ASSET_FILENAME .gz)
+  info "# check for/extract UF2_PICORUBY_FILE: $UF2_PICORUBY_FILE"
+  if [ ! -f $UF2_PICORUBY_FILE ]; then
+    #boom "## gunzip $ASSET_FILENAME and expecting $UF2_PICORUBY_FILE"
+    gunzip $ASSET_FILENAME
+    if [ ! $? -eq 0 ]; then
+      boom "gunzip $ASSET_FILENAME failed"
+    fi
+  else
+    info "# Skip extract: UF2_PICORUBY_FILE=$UF2_PICORUBY_FILE exists"
+  fi
+  info "# exporting details in YAML: $PICORUBY_YAML"  
+  echo "PICORUBY_UF2_FILE: ${UF2_PICORUBY_FILE}" > $PICORUBY_YAML
+  echo "PICORUBY_UF2_VERSION: ${LATEST_VERSION}" >> $PICORUBY_YAML
+  #run "yq -i 'PICORUBY.UF2.VERSION = "$LATEST_VERSION"' .picoruby.yaml"
+  cat $PICORUBY_YAML | lolcat
+  popd > /dev/null
+  info "# Latest version $LATEST_VERSION file: $UF2_PICORUBY_FILE available"
+}
+
+if [ "${BASH_SOURCE[0]}" = "$0" ]; then
+  d.pico-lol
+  get_latest_version
+else
+  # info "get_latest_version() available in bash as a function"
+  return 0
+fi
