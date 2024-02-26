@@ -12,3 +12,10 @@ lib
 ├── helpers.sh          # Helper functions for the bin tools
 └── insanity_check      # Sanity checker for dependancies 
 ```
+
+### Releases
+
+1. Update CHANGELOG.MD version
+2. Commit changes
+3. Tag: `git tag -a v?.?.? -m "version message"`
+4. Push & push tags: `git push origin --tags`

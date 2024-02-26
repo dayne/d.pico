@@ -12,6 +12,7 @@ Tracking notable changes to this proejct.  Format is based on [Keep a Changelog]
 ### Added
 - VERSION file
 ### Changed
+- Expanded README to include reasonable reminder instructions for releases
 - Moved around scripts and names: `cl-picoruby` -> `cl-picoruby-install`
 
 ## [0.0.1] - 2024-02-25
