@@ -63,7 +63,9 @@ function install_picoruby() {
   agree "Install PICORUBY v${PICORUBY_UF2_VERSION} on to ${BOARD_ID} at ${RP2DIR}"
   if [ $? -eq 0 ]; then
     run "cp $TARGET_UF2 $RP2DIR"
-    cowsay "${PICORUBY_UF2_VERSION} available. Happy Hacking" | lolcat
+    cowsay "${PICORUBY_UF2_VERSION} available. 
+      Happy Hacking! 
+      Cow hack: gtkterm --port /dev/ttyACM0" | lolcat
   else
     info "# DIY method: cp $TARGET_UF2 $RP2DIR "
   fi
