@@ -14,9 +14,9 @@ lib
 └── insanity_check   # Sanity checker for dependancies 
 ```
 
-### Usage
+## Usage
 
-0. Clone sanity check
+### Clone sanity check
   Try to avoid unleashing insane clones into the world.
 
   ```bash
@@ -26,15 +26,17 @@ lib
   ```
   Fix missing dependancies until you have a satisfied cow.
 
-1. Download and cache latest version
+### Download and cache latest [picoruby](https://github.com/picoruby/picoruby) 
   `bin/picoruby-latest`
 
-2. Install picoruby on a pico
+### Install picoruby on a pico
 
 - Press and hold the BOOT button and plugin the pico
 - Run `bin/picoruby-install`
 - Attach to the pico with you favorite serial connection tool
   - Recommended: `gtkterm --port /dev/ttyACM0`
+
+## Metabrain
 
 ### Releases
 
@@ -43,7 +45,7 @@ lib
 3. Tag: `git tag -a v?.?.? -m "version message"`
 4. Push & push tags: `git push origin --tags`
 
-## TODO or NOTDO List
+### TODO or NOTDO List
 
 _The `d.pico` is a half baked collection of rusty tools to help reduce the barrier of entry for me (and hopefully others) to get hacking on the RPI Pico microcontrollers. No grand schemes to take over the world or become tools so the TODOs are many and none._
 
