@@ -14,6 +14,28 @@ lib
 └── insanity_check   # Sanity checker for dependancies 
 ```
 
+### Usage
+
+0. Clone sanity check
+  Try to avoid unleashing insane clones into the world.
+
+  ```bash
+  git clone https://github.com/dayne/d.pico
+  cd d.pico
+  ./lib/insanity_check
+  ```
+  Fix missing dependancies until you have a satisfied cow.
+
+1. Download and cache latest version
+  `bin/picoruby-latest`
+
+2. Install picoruby on a pico
+
+- Press and hold the BOOT button and plugin the pico
+- Run `bin/picoruby-install`
+- Attach to the pico with you favorite serial connection tool
+  - Recommended: `gtkterm --port /dev/ttyACM0`
+
 ### Releases
 
 1. Update CHANGELOG.MD version
