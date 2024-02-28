@@ -3,6 +3,9 @@
 Dayne's Raspberry Pi Pico / MCU 
 
 The enchilada that works now is focused on [picoruby](https://github.com/picoruby/picoruby) helper scripts.
+
+> _warning: the intention behind d.pico is to collect the tools that help me setup &  remember how to do things for Raspberry Pi / MCU hacking on Ubuntu/Linux and Raspberry Pi boxes. Not intended as broadly useful tools for others and not likely relevant for windows/mac/wsl/chrome environments._
+
 ```
 bin
 ├── picoruby-install # Install cached PicoRuby to RPI PICO
